@@ -80,7 +80,7 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
     }
 
     try {
-      await axios.post('http://localhost:8080/api/sendQuery', {
+      await axios.post('https://interior-designer-backend-73ri.onrender.com/api/sendQuery', {
         emailId: formData.email,
         contactNo: formData.contact,
         postId: productId,

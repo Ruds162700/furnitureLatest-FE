@@ -10,8 +10,8 @@ const Main = () => {
     <div>
       <HeroSection />
       <AboutSection />
-      <div className="bg-[#1c1c1c]">
         <Testimonial/>
+      <div className="bg-[#faf8f5]">
         <FindUs className="mx-6" />
       </div>
       <Footer />

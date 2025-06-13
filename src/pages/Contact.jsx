@@ -1,12 +1,7 @@
 import React from 'react';
-import image from '../images/hero.jpg';
-import { MdOutlineMailOutline } from "react-icons/md";
-import { LuPhoneCall } from "react-icons/lu";
-import { IoMdChatboxes } from "react-icons/io";
+import { Mail, Phone, MessageSquare, Plus, Minus, Send, CheckCircle, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Plus, Minus } from 'lucide-react';
-import Footer_Contact from '../Component/Footer_Contact';
-
+import Footer from '../Component/Footer';
 const Contact = () => {
     const [activeTab, setActiveTab] = useState(1);
     const [isVisible, setIsVisible] = useState(false);
@@ -99,7 +94,7 @@ const Contact = () => {
             setSuccessMessage('Your message has been sent successfully! We will get back to you soon.');
             setShowSuccess(true);
             
-            // Reset form after 20 seconds
+            // Reset form after 3 seconds
             setTimeout(() => {
                 setFormData({
                     firstName: '',
@@ -111,7 +106,7 @@ const Contact = () => {
                 });
                 setShowSuccess(false);
                 setSuccessMessage('');
-            }, 1000);
+            }, 3000);
         }
     };
 
@@ -143,175 +138,235 @@ const Contact = () => {
     ];
 
     return (
-        <div className='bg-[#1c1c1c] min-h-screen text-white'>
-            {/* Main Section */}
-            <div className='flex flex-col-reverse md:flex-row md:justify-evenly md:items-center md:p-10'>
-                {/* Left Column */}
-                <div className='flex flex-col text-center items-center mt-8 md:justify-center md:ml-5 md:items-start h-auto w-full md:w-1/2 lg:w-2/3'>
-                    <h1 className='text-3xl lg:text-4xl font-bold text-white text-center md:text-left'>
-                        Contact Us and Get Your Deal of Choice
-                    </h1>
-                    <p className='mt-4 text-gray-300 md:text-lg'>
-                        We provide the best deals tailored to your needs. Reach out to us for personalized services!
-                    </p>
-                    <div className='mt-6 w-3/4 md:w-2/3'>
-                        <div className='flex flex-col md:flex-row mt-6 items-stretch'>
-                            <input
-                                type='email'
-                                placeholder='Enter your email'
-                                className='w-full md:w-auto p-3 rounded-md bg-[#444444] border-b-2 border-white text-white focus:outline-none mb-4 md:mb-0 md:flex-1'
-                            />
-                            <button className='md:ml-2 bg-orange-400 hover:bg-orange-500 text-white px-5 py-3 rounded-md shadow-lg'>
-                                Contact Us
-                            </button>
-                        </div>
-                    </div>
-                </div>
+        <div className='bg-[#FAF8F5] min-h-screen text-[#2B2B2B]'>
+            {/* Hero Section */}
+            <div className='relative py-20 md:py-32 overflow-hidden'>
+                <div className="absolute inset-0 bg-gradient-to-br from-[#F4ECE6] via-[#FAF8F5] to-[#F4ECE6] opacity-80"></div>
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center opacity-20"></div>
+                
+                <div className='container mx-auto px-6 relative z-10'>
+                    <div className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${
+                        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                    }`}>
+                        <span className="text-sm md:text-lg font-medium mb-4 bg-white/80 px-8 py-2 rounded-full backdrop-blur-md border border-[#E1DDD7] shadow-sm hover:bg-[#D79C66] hover:text-white transition-all duration-300 inline-block">
+                            Get In Touch
+                        </span>
+                        <h1 className='text-4xl md:text-6xl font-bold mt-6 mb-6 bg-gradient-to-r from-[#2B2B2B] via-[#D79C66] to-[#2B2B2B] bg-clip-text text-transparent'>
+                            Contact Us and Get Your Dream Interior
+                        </h1>
+                        <p className='text-lg md:text-xl text-[#6D6D6D] leading-relaxed max-w-3xl mx-auto'>
+                            We provide personalized interior design solutions tailored to your unique style and needs. Let's bring your vision to life!
+                        </p>
+                        
+                        {/* Quick Contact CTA */}
 
-                {/* Right Column (Image) */}
-                <div className='flex justify-center md:mr-5 md:w-1/2'>
-                    <img src={image} alt='contact' className='h-40 w-auto mt-6 md:h-72' />
+                    </div>
                 </div>
             </div>
 
             {/* Contact Options */}
-            <div className='flex justify-center mt-12 px-4'>
-                <div className='flex w-full md:w-4/5 lg:w-2/3 border-2 border-gray-500 rounded-xl bg-gradient-to-r from-[#444444] to-[#222222]'>
-                    <div className='flex-1 p-6 flex flex-col justify-center items-center hover:bg-[#555555] transition-all duration-300'>
-                        <MdOutlineMailOutline className='w-8 h-8 md:w-10 md:h-10 text-orange-400' />
-                        <p className='text-sm mt-2 text-gray-300'>Email Us</p>
+            <div className='flex justify-center px-4 -mt-16 relative z-20'>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl'>
+                    <div className='group bg-white rounded-2xl p-8 shadow-lg border border-[#E1DDD7] hover:shadow-xl hover:scale-105 transition-all duration-300'>
+                        <div className='flex flex-col items-center text-center'>
+                            <div className='bg-[#F4ECE6] p-4 rounded-full mb-4 group-hover:bg-[#D79C66] transition-colors duration-300'>
+                                <Mail className='w-8 h-8 text-[#D79C66] group-hover:text-white' />
+                            </div>
+                            <h3 className='text-lg font-semibold text-[#2B2B2B] mb-2'>Email Us</h3>
+                            <p className='text-[#6D6D6D] text-sm'>info@ankitinterior.com</p>
+                        </div>
                     </div>
-                    <div className='flex-1 p-6 flex flex-col justify-center items-center border-l border-gray-500 hover:bg-[#555555] transition-all duration-300'>
-                        <LuPhoneCall className='w-8 h-8 md:w-10 md:h-10 text-orange-400' />
-                        <p className='text-sm mt-2 text-gray-300'>Call Us</p>
+                    
+                    <div className='group bg-white rounded-2xl p-8 shadow-lg border border-[#E1DDD7] hover:shadow-xl hover:scale-105 transition-all duration-300'>
+                        <div className='flex flex-col items-center text-center'>
+                            <div className='bg-[#F4ECE6] p-4 rounded-full mb-4 group-hover:bg-[#D79C66] transition-colors duration-300'>
+                                <Phone className='w-8 h-8 text-[#D79C66] group-hover:text-white' />
+                            </div>
+                            <h3 className='text-lg font-semibold text-[#2B2B2B] mb-2'>Call Us</h3>
+                            <p className='text-[#6D6D6D] text-sm'>+91 98765 43210</p>
+                        </div>
                     </div>
-                    <div className='flex-1 p-6 flex flex-col justify-center items-center border-l border-gray-500 hover:bg-[#555555] transition-all duration-300'>
-                        <IoMdChatboxes className='w-8 h-8 md:w-10 md:h-10 text-orange-400' />
-                        <p className='text-sm mt-2 text-gray-300'>Chat with Us</p>
+                    
+                    <div className='group bg-white rounded-2xl p-8 shadow-lg border border-[#E1DDD7] hover:shadow-xl hover:scale-105 transition-all duration-300'>
+                        <div className='flex flex-col items-center text-center'>
+                            <div className='bg-[#F4ECE6] p-4 rounded-full mb-4 group-hover:bg-[#D79C66] transition-colors duration-300'>
+                                <MessageSquare className='w-8 h-8 text-[#D79C66] group-hover:text-white' />
+                            </div>
+                            <h3 className='text-lg font-semibold text-[#2B2B2B] mb-2'>Chat with Us</h3>
+                            <p className='text-[#6D6D6D] text-sm'>Live chat support</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Form Section */}
-            <div className='flex flex-col md:flex-row lg:flex-row justify-center mt-12 px-6'>
-                <div className='md:w-1/2 lg:w-2/3'>
-                    <form className='bg-[#444444] p-8 rounded-xl shadow-lg' onSubmit={handleSubmit}>
-                        <h2 className='text-2xl font-bold mb-6 text-center text-orange-400'>Send Us A Message</h2>
-                        
-                        {/* Success Message */}
-                        {showSuccess && (
-                            <div className='bg-green-600 text-white p-4 rounded-md mb-6 transition-all duration-300'>
-                                {successMessage}
-                            </div>
-                        )}
-                        
-                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                            <div>
-                                <input
-                                    type='text'
-                                    name='firstName'
-                                    value={formData.firstName}
-                                    onChange={handleChange}
-                                    placeholder='First Name'
-                                    className={`p-3 bg-[#333333] text-white border ${errors.firstName ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none w-full`}
-                                />
-                                {errors.firstName && <p className='text-red-500 text-xs mt-1'>{errors.firstName}</p>}
+            <div className='container mx-auto px-6 py-20'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-start'>
+                    {/* Contact Form */}
+                    <div className='order-2 lg:order-1'>
+                        <div className='bg-white rounded-3xl shadow-lg border border-[#E1DDD7] p-8 lg:p-10'>
+                            <div className='text-center mb-8'>
+                                <h2 className='text-3xl font-bold text-[#2B2B2B] mb-2'>Send Us A Message</h2>
+                                <p className='text-[#6D6D6D]'>We'd love to hear from you. Drop us a line!</p>
                             </div>
                             
-                            <div>
-                                <input
-                                    type='text'
-                                    name='lastName'
-                                    value={formData.lastName}
-                                    onChange={handleChange}
-                                    placeholder='Last Name'
-                                    className={`p-3 bg-[#333333] text-white border ${errors.lastName ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none w-full`}
-                                />
-                                {errors.lastName && <p className='text-red-500 text-xs mt-1'>{errors.lastName}</p>}
+                            {/* Success Message */}
+                            {showSuccess && (
+                                <div className='bg-green-50 border border-green-200 text-green-800 p-4 rounded-2xl mb-6 flex items-center gap-3 transition-all duration-300'>
+                                    <CheckCircle className="w-5 h-5 text-green-600" />
+                                    {successMessage}
+                                </div>
+                            )}
+                            
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                                <div>
+                                    <input
+                                        type='text'
+                                        name='firstName'
+                                        value={formData.firstName}
+                                        onChange={handleChange}
+                                        placeholder='First Name'
+                                        className={`w-full p-4 bg-[#F4ECE6] text-[#2B2B2B] border ${errors.firstName ? 'border-red-400' : 'border-transparent'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D79C66] focus:border-transparent placeholder-[#6D6D6D] transition-all duration-300`}
+                                    />
+                                    {errors.firstName && <p className='text-red-500 text-sm mt-2'>{errors.firstName}</p>}
+                                </div>
+                                
+                                <div>
+                                    <input
+                                        type='text'
+                                        name='lastName'
+                                        value={formData.lastName}
+                                        onChange={handleChange}
+                                        placeholder='Last Name'
+                                        className={`w-full p-4 bg-[#F4ECE6] text-[#2B2B2B] border ${errors.lastName ? 'border-red-400' : 'border-transparent'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D79C66] focus:border-transparent placeholder-[#6D6D6D] transition-all duration-300`}
+                                    />
+                                    {errors.lastName && <p className='text-red-500 text-sm mt-2'>{errors.lastName}</p>}
+                                </div>
+                                
+                                <div className='col-span-1 md:col-span-2'>
+                                    <input
+                                        type='email'
+                                        name='email'
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        placeholder='Your Email Address'
+                                        className={`w-full p-4 bg-[#F4ECE6] text-[#2B2B2B] border ${errors.email ? 'border-red-400' : 'border-transparent'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D79C66] focus:border-transparent placeholder-[#6D6D6D] transition-all duration-300`}
+                                    />
+                                    {errors.email && <p className='text-red-500 text-sm mt-2'>{errors.email}</p>}
+                                </div>
+                                
+                                <div className='col-span-1 md:col-span-2'>
+                                    <input
+                                        type='tel'
+                                        name='phone'
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        placeholder='Your Phone Number (Optional)'
+                                        className={`w-full p-4 bg-[#F4ECE6] text-[#2B2B2B] border ${errors.phone ? 'border-red-400' : 'border-transparent'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D79C66] focus:border-transparent placeholder-[#6D6D6D] transition-all duration-300`}
+                                    />
+                                    {errors.phone && <p className='text-red-500 text-sm mt-2'>{errors.phone}</p>}
+                                </div>
+                                
+                                <div className='col-span-1 md:col-span-2'>
+                                    <textarea
+                                        name='message'
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                        placeholder='How Can We Help You?'
+                                        className={`w-full p-4 bg-[#F4ECE6] text-[#2B2B2B] border ${errors.message ? 'border-red-400' : 'border-transparent'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#D79C66] focus:border-transparent placeholder-[#6D6D6D] transition-all duration-300 resize-none`}
+                                        rows={4}
+                                    ></textarea>
+                                    {errors.message && <p className='text-red-500 text-sm mt-2'>{errors.message}</p>}
+                                </div>
                             </div>
                             
-                            <div className='col-span-1 md:col-span-2'>
-                                <input
-                                    type='email'
-                                    name='email'
-                                    value={formData.email}
+                            <div className='flex items-start mt-6 gap-3'>
+                                <input 
+                                    type='checkbox' 
+                                    name='privacyPolicy'
+                                    checked={formData.privacyPolicy}
                                     onChange={handleChange}
-                                    placeholder='Your Email Address'
-                                    className={`p-3 bg-[#333333] text-white border ${errors.email ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none w-full`}
+                                    className='mt-1 accent-[#D79C66]' 
                                 />
-                                {errors.email && <p className='text-red-500 text-xs mt-1'>{errors.email}</p>}
+                                <p className='text-[#6D6D6D] text-sm leading-relaxed'>I acknowledge that I have read and agree to the Privacy Policy and Terms of Service</p>
                             </div>
+                            {errors.privacyPolicy && <p className='text-red-500 text-sm mt-2'>{errors.privacyPolicy}</p>}
                             
-                            <div className='col-span-1 md:col-span-2'>
-                                <input
-                                    type='tel'
-                                    name='phone'
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    placeholder='Your Phone Number (Optional)'
-                                    className={`p-3 bg-[#333333] text-white border ${errors.phone ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none w-full`}
-                                />
-                                {errors.phone && <p className='text-red-500 text-xs mt-1'>{errors.phone}</p>}
-                            </div>
-                            
-                            <div className='col-span-1 md:col-span-2'>
-                                <textarea
-                                    name='message'
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    placeholder='How Can We Help You?'
-                                    className={`p-3 bg-[#333333] text-white border ${errors.message ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none w-full`}
-                                    rows={4}
-                                ></textarea>
-                                {errors.message && <p className='text-red-500 text-xs mt-1'>{errors.message}</p>}
-                            </div>
+                            <button 
+                                type='submit'
+                                className='w-full bg-[#D79C66] hover:bg-[#C9854D] text-white mt-8 p-4 rounded-2xl font-semibold transition-all duration-300 hover:shadow-lg flex items-center justify-center gap-2'
+                            >
+                                <Send className="w-5 h-5" />
+                                Get in Touch
+                            </button>
                         </div>
-                        
-                        <div className='flex items-center mt-4'>
-                            <input 
-                                type='checkbox' 
-                                name='privacyPolicy'
-                                checked={formData.privacyPolicy}
-                                onChange={handleChange}
-                                className='mr-2' 
-                            />
-                            <p className='text-gray-300 text-sm'>I acknowledge that I have read the Privacy Policy</p>
-                        </div>
-                        {errors.privacyPolicy && <p className='text-red-500 text-xs mt-1'>{errors.privacyPolicy}</p>}
-                        
-                        <button 
-                            type='submit'
-                            className='bg-orange-400 hover:bg-orange-500 text-white mt-6 p-3 rounded-md w-full font-bold'
-                        >
-                            Get in Touch
-                        </button>
-                    </form>
-                </div>
+                    </div>
 
-                {/* Closing Statement */}
-                <div className='text-center md:mt-36 md:w-1/2 mt-8'>
-                    <h3 className='text-2xl font-semibold text-orange-400 mb-4'>
-                        We're Here to Assist You!
-                    </h3>
-                    <p className='text-lg text-gray-300'>
-                        Don't hesitate to get in touch with us. Our team is ready to provide the best service and help you with any questions or concerns you may have.
-                    </p>
+                    {/* Info Section */}
+                    <div className='order-1 lg:order-2 lg:pl-8'>
+                        <div className='bg-white rounded-3xl shadow-lg border border-[#E1DDD7] p-8 lg:p-10'>
+                            <div className='flex items-center gap-3 mb-6'>
+                                <div className='bg-[#D79C66] p-2 rounded-full'>
+                                    <Star className='w-6 h-6 text-white' />
+                                </div>
+                                <h3 className='text-2xl font-bold text-[#2B2B2B]'>
+                                    We're Here to Assist You!
+                                </h3>
+                            </div>
+                            <p className='text-[#6D6D6D] leading-relaxed mb-6'>
+                                Don't hesitate to get in touch with us. Our team of experienced interior designers is ready to provide the best service and help you transform your space into something extraordinary.
+                            </p>
+                            
+                            <div className='space-y-4'>
+                                <div className='flex items-center gap-4 p-4 bg-[#F4ECE6] rounded-2xl'>
+                                    <div className='bg-[#D79C66] p-2 rounded-full'>
+                                        <Phone className='w-4 h-4 text-white' />
+                                    </div>
+                                    <div>
+                                        <p className='font-medium text-[#2B2B2B]'>Quick Response</p>
+                                        <p className='text-sm text-[#6D6D6D]'>We respond within 24 hours</p>
+                                    </div>
+                                </div>
+                                
+                                <div className='flex items-center gap-4 p-4 bg-[#F4ECE6] rounded-2xl'>
+                                    <div className='bg-[#D79C66] p-2 rounded-full'>
+                                        <Star className='w-4 h-4 text-white' />
+                                    </div>
+                                    <div>
+                                        <p className='font-medium text-[#2B2B2B]'>Expert Consultation</p>
+                                        <p className='text-sm text-[#6D6D6D]'>Free design consultation</p>
+                                    </div>
+                                </div>
+                                
+                                <div className='flex items-center gap-4 p-4 bg-[#F4ECE6] rounded-2xl'>
+                                    <div className='bg-[#D79C66] p-2 rounded-full'>
+                                        <CheckCircle className='w-4 h-4 text-white' />
+                                    </div>
+                                    <div>
+                                        <p className='font-medium text-[#2B2B2B]'>Satisfaction Guaranteed</p>
+                                        <p className='text-sm text-[#6D6D6D]'>100% customer satisfaction</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div className="relative w-full bg-[#1c1c1c] py-24 text-white">
-                <div className="max-w-5xl mx-auto px-6 lg:px-8">
+            {/* FAQ Section */}
+            <div className="bg-[#F4ECE6] py-20">
+                <div className="max-w-4xl mx-auto px-6">
                     {/* Title and Description */}
                     <div
                         className={`text-center mb-12 transition-all duration-1000 ${
                             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                         }`}
                     >
-                        <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">
+                        <h2 className="text-3xl md:text-5xl font-bold text-[#2B2B2B] mb-4">
                             Frequently Asked Questions
                         </h2>
-                        <p className="mt-4 text-gray-400 max-w-2xl mx-auto">
-                            Find answers to the most commonly asked questions below.
+                        <p className="text-[#6D6D6D] max-w-2xl mx-auto leading-relaxed">
+                            Find answers to the most commonly asked questions about our interior design services.
                         </p>
                     </div>
 
@@ -327,27 +382,34 @@ const Contact = () => {
                             >
                                 <div
                                     onClick={() => handleTabClick(section.id)}
-                                    className="group relative overflow-hidden rounded-lg bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 cursor-pointer border border-white/10 p-6"
+                                    className="group relative overflow-hidden rounded-2xl bg-white shadow-sm border border-[#E1DDD7] transition-all duration-300 hover:shadow-lg cursor-pointer p-6"
                                 >
                                     <div className="flex items-center justify-between">
-                                        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                                        <h3 className="text-lg font-semibold text-[#2B2B2B] flex items-center gap-3">
                                             <span className="text-2xl transform group-hover:scale-110 transition-transform">
                                                 {section.icon}
                                             </span>
-                                            {`${section.id.toString().padStart(2, '0')} ${section.title}`}
+                                            <span className="text-[#D79C66] font-medium mr-2">
+                                                {section.id.toString().padStart(2, '0')}.
+                                            </span>
+                                            {section.title}
                                         </h3>
-                                        {activeTab === section.id ? (
-                                            <Minus className="w-5 h-5 text-white/60" />
-                                        ) : (
-                                            <Plus className="w-5 h-5 text-white/60" />
-                                        )}
+                                        <div className="bg-[#F4ECE6] p-2 rounded-full group-hover:bg-[#D79C66] transition-colors duration-300">
+                                            {activeTab === section.id ? (
+                                                <Minus className="w-4 h-4 text-[#D79C66] group-hover:text-white" />
+                                            ) : (
+                                                <Plus className="w-4 h-4 text-[#D79C66] group-hover:text-white" />
+                                            )}
+                                        </div>
                                     </div>
                                     <div
                                         className={`overflow-hidden transition-all duration-300 ${
                                             activeTab === section.id ? "max-h-48 mt-4" : "max-h-0"
                                         }`}
                                     >
-                                        <p className="text-gray-300">{section.content}</p>
+                                        <div className="pt-4 border-t border-[#E1DDD7]">
+                                            <p className="text-[#6D6D6D] leading-relaxed">{section.content}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -355,7 +417,9 @@ const Contact = () => {
                     </div>
                 </div>
             </div>
-            <Footer_Contact/>
+
+            {/* Footer Placeholder */}
+            <Footer />
         </div>
     );
 };
