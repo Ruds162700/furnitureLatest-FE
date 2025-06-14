@@ -6,7 +6,7 @@ import Category from "./pages/Category";
 import Product from "./pages/Product";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
-
+import NotFoundPage from "./pages/404";
 // Admin Pages
 import Dashboard from "./pages/admin/Dashboard";
 import Products from "./pages/admin/Products";
@@ -28,40 +28,46 @@ function App() {
         <Route path="/admin/inquiries" element={<Inquiries />} />
 
         {/* Public Routes */}
-        
+
         <Route path="/" element={
           <>
-          <Navbar/>
-          <Home />
+            <Navbar />
+            <Home />
           </>
-          
-          } />
+
+        } />
         <Route path="/category" element={
           <>
-          <Navbar/>
-          <Category />
+            <Navbar />
+            <Category />
           </>
-          } />
+        } />
         <Route path="/product/:id" element={
           <>
-          <Navbar/>
-          <Product />
+            <Navbar />
+            <Product />
           </>
         } />
         <Route path="/about" element={
           <>
-          <Navbar/>
-          <About />
+            <Navbar />
+            <About />
           </>
-          
-          } />
+
+        } />
         <Route path="/contact" element={
           <>
-          <Navbar/>
-          <Contact/>
+            <Navbar />
+            <Contact />
           </>
-          
-          } />
+
+        } />
+        <Route path="*" element={
+          <>
+            <NotFoundPage />
+          </>
+        } />
+
       </Routes>
     </Router>
   );

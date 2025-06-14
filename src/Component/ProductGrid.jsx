@@ -17,7 +17,7 @@ const ProductGrid = ({ products }) => {
             {/* Image Container */}
             <div className="relative aspect-[16/10] overflow-hidden">
               <img
-                src={`https://placehold.co/800x500`}
+                src={product.files[0].url}
                 alt={product.title}
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
               />

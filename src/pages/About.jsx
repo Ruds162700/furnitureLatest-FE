@@ -83,8 +83,8 @@ const AboutUs = () => {
   return (
     <div className="bg-[#FAF8F5] min-h-screen text-[#2B2B2B]">
       {/* Hero Section */}
-      <div className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F5]/95 via-[#FAF8F5]/90 to-[#FAF8F5]/95 z-10"></div>
+      <div className="relative pt-24 md:pt-32 pb-20 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F5]/95 via-[#FAF8F5]/90 to-[#FAF8F5]/95 z-10"></div>
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center opacity-30 z-0"></div>
 
         <div className="container mx-auto px-6 relative z-20">
