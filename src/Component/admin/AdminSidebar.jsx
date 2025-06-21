@@ -28,7 +28,6 @@ const AdminSidebar = ({ mobile, onClose, isSidebarOpen, setIsSidebarOpen }) => {
       icon: <MessageSquare size={20} />,
       path: "/admin/inquiries",
     },
-    { name: "Settings", icon: <Settings size={20} />, path: "/admin/settings" },
   ];
 
   const isActive = (path) => {

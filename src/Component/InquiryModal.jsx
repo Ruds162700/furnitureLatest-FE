@@ -80,11 +80,12 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
     }
 
     try {
-      await axios.post('https://interior-designer-backend-73ri.onrender.com/api/sendQuery', {
+      // Updated API call to match your backend
+      const response = await axios.post('https://interior-designer-backend-73ri.onrender.com/api/queries/sendQuery', {
         emailId: formData.email,
         contactNo: formData.contact,
         postId: productId,
-        additionalInfo: formData.additionalInfo
+        query: formData.additionalInfo || "Want to Contact your firm"
       });
 
       setIsSuccess(true);
@@ -94,11 +95,25 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
       setTimeout(() => {
         setIsSuccess(false);
         setFormData({ email: "", contact: "", additionalInfo: "" });
+        setErrors({});
         onClose();
       }, 3000);
     } catch (error) {
+      console.error('Error submitting inquiry:', error);
+      
+      // Handle different types of errors
+      let errorMessage = "Failed to submit inquiry. Please try again.";
+      
+      if (error.response) {
+        // Server responded with error status
+        errorMessage = error.response.data?.message || `Server error: ${error.response.status}`;
+      } else if (error.request) {
+        // Request was made but no response received
+        errorMessage = "Network error. Please check your connection.";
+      }
+      
       setErrors({
-        submit: error.response?.data?.message || "Failed to submit inquiry. Please try again."
+        submit: errorMessage
       });
     } finally {
       setIsLoading(false);
@@ -107,27 +122,27 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-gradient-to-b from-white to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 rounded-2xl w-full max-w-md shadow-2xl transform transition-all border border-zinc-200 dark:border-zinc-800">
+      <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl w-full max-w-md shadow-2xl transform transition-all border border-gray-200">
         <div className="relative p-6">
           {/* Close button */}
           <button
             onClick={onClose}
             disabled={isLoading}
-            className="absolute right-4 top-4 p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all disabled:opacity-50"
+            className="absolute right-4 top-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all disabled:opacity-50"
           >
-            <X className="w-4 h-4 text-zinc-600 dark:text-zinc-300" />
+            <X className="w-4 h-4 text-gray-600" />
           </button>
 
           {isSuccess ? (
             // Success Message
             <div className="py-8 text-center">
-              <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4 animate-bounce">
-                <Check className="w-8 h-8 text-green-600 dark:text-green-400" />
+              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 animate-bounce">
+                <Check className="w-8 h-8 text-green-600" />
               </div>
-              <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-2">
                 Thank You!
               </h2>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="text-sm text-gray-600">
                 Your inquiry has been submitted successfully. We'll get back to you soon.
               </p>
             </div>
@@ -136,11 +151,11 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
             <>
               {/* Header */}
               <div className="mb-6">
-                <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                <h2 className="text-2xl font-semibold text-gray-900">
                   Submit Inquiry
                 </h2>
                 {productTitle && (
-                  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                  <p className="mt-2 text-sm text-gray-600">
                     for {productTitle}
                   </p>
                 )}
@@ -149,10 +164,10 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-5">
                 {errors.submit && (
-                  <div className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+                  <div className="p-3 bg-red-100 border border-red-200 rounded-lg">
                     <div className="flex items-center space-x-2">
-                      <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
-                      <p className="text-sm text-red-600 dark:text-red-400">{errors.submit}</p>
+                      <AlertCircle className="w-4 h-4 text-red-600" />
+                      <p className="text-sm text-red-600">{errors.submit}</p>
                     </div>
                   </div>
                 )}
@@ -160,7 +175,7 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
                 <div className="space-y-1.5">
                   <label
                     htmlFor="email"
-                    className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                    className="block text-sm font-medium text-gray-700"
                   >
                     Email Address
                   </label>
@@ -171,22 +186,22 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
                     value={formData.email}
                     onChange={handleChange}
                     disabled={isLoading}
-                    className={`w-full px-4 py-3 bg-white dark:bg-zinc-800 border ${
+                    className={`w-full px-4 py-3 bg-white border ${
                       errors.email 
-                        ? 'border-red-300 dark:border-red-700 focus:ring-red-500 dark:focus:ring-red-400' 
-                        : 'border-zinc-200 dark:border-zinc-700 focus:ring-blue-500 dark:focus:ring-blue-400'
-                    } rounded-xl focus:outline-none focus:ring-2 text-zinc-900 dark:text-zinc-100 text-sm transition-all disabled:opacity-60`}
+                        ? 'border-red-300 focus:ring-red-500' 
+                        : 'border-gray-200 focus:ring-blue-500'
+                    } rounded-xl focus:outline-none focus:ring-2 text-gray-900 text-sm transition-all disabled:opacity-60`}
                     placeholder="Enter your email"
                   />
                   {errors.email && (
-                    <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.email}</p>
+                    <p className="text-sm text-red-600 mt-1">{errors.email}</p>
                   )}
                 </div>
 
                 <div className="space-y-1.5">
                   <label
                     htmlFor="contact"
-                    className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                    className="block text-sm font-medium text-gray-700"
                   >
                     Contact Number
                   </label>
@@ -197,22 +212,22 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
                     value={formData.contact}
                     onChange={handleChange}
                     disabled={isLoading}
-                    className={`w-full px-4 py-3 bg-white dark:bg-zinc-800 border ${
+                    className={`w-full px-4 py-3 bg-white border ${
                       errors.contact 
-                        ? 'border-red-300 dark:border-red-700 focus:ring-red-500 dark:focus:ring-red-400' 
-                        : 'border-zinc-200 dark:border-zinc-700 focus:ring-blue-500 dark:focus:ring-blue-400'
-                    } rounded-xl focus:outline-none focus:ring-2 text-zinc-900 dark:text-zinc-100 text-sm transition-all disabled:opacity-60`}
+                        ? 'border-red-300 focus:ring-red-500' 
+                        : 'border-gray-200 focus:ring-blue-500'
+                    } rounded-xl focus:outline-none focus:ring-2 text-gray-900 text-sm transition-all disabled:opacity-60`}
                     placeholder="Enter your contact number"
                   />
                   {errors.contact && (
-                    <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.contact}</p>
+                    <p className="text-sm text-red-600 mt-1">{errors.contact}</p>
                   )}
                 </div>
 
                 <div className="space-y-1.5">
                   <label
                     htmlFor="additionalInfo"
-                    className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                    className="block text-sm font-medium text-gray-700"
                   >
                     Additional Information
                   </label>
@@ -223,22 +238,22 @@ const InquiryModal = ({ isOpen, onClose, onSubmit, productTitle, productId }) =>
                     onChange={handleChange}
                     disabled={isLoading}
                     rows="4"
-                    className={`w-full px-4 py-3 bg-white dark:bg-zinc-800 border ${
+                    className={`w-full px-4 py-3 bg-white border ${
                       errors.additionalInfo 
-                        ? 'border-red-300 dark:border-red-700 focus:ring-red-500 dark:focus:ring-red-400' 
-                        : 'border-zinc-200 dark:border-zinc-700 focus:ring-blue-500 dark:focus:ring-blue-400'
-                    } rounded-xl focus:outline-none focus:ring-2 text-zinc-900 dark:text-zinc-100 text-sm transition-all disabled:opacity-60`}
+                        ? 'border-red-300 focus:ring-red-500' 
+                        : 'border-gray-200 focus:ring-blue-500'
+                    } rounded-xl focus:outline-none focus:ring-2 text-gray-900 text-sm transition-all disabled:opacity-60`}
                     placeholder="Enter any additional information or requirements"
                   />
                   {errors.additionalInfo && (
-                    <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.additionalInfo}</p>
+                    <p className="text-sm text-red-600 mt-1">{errors.additionalInfo}</p>
                   )}
                 </div>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full px-6 py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-60 transform hover:scale-[0.98] active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900"
+                  className="w-full px-6 py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-60 transform hover:scale-[0.98] active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
