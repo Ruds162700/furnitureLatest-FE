@@ -63,11 +63,6 @@ const Navbar = () => {
           </Link>
         ))}
       </div>
-
-      {/* Register Button */}
-      <button className="hidden md:block border-2 border-[#D79C66] text-[#D79C66] px-6 py-2 rounded-full text-lg font-medium hover:bg-[#D79C66] hover:text-white transition duration-300">  {/* Added text-lg */}
-        Register
-      </button>
     </nav>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -14,6 +14,7 @@ import {
 // AdminSidebar Component
 const AdminSidebar = ({ mobile, onClose, isSidebarOpen, setIsSidebarOpen }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/admin" },
@@ -48,6 +49,24 @@ const AdminSidebar = ({ mobile, onClose, isSidebarOpen, setIsSidebarOpen }) => {
       onClose();
     } else if (setIsSidebarOpen) {
       setIsSidebarOpen(false);
+    }
+  };
+
+  const handleLogout = () => {
+    // Confirm logout
+    if (window.confirm("Are you sure you want to logout?")) {
+      // Remove authentication from localStorage
+      localStorage.removeItem("isAdminAuthenticated");
+      
+      // Close sidebar if mobile
+      if (onClose) {
+        onClose();
+      } else if (setIsSidebarOpen) {
+        setIsSidebarOpen(false);
+      }
+      
+      // Navigate to login page
+      navigate("/login");
     }
   };
 
@@ -99,19 +118,18 @@ const AdminSidebar = ({ mobile, onClose, isSidebarOpen, setIsSidebarOpen }) => {
           </ul>
         </nav>
 
-        {/* Sidebar footer */}
+        {/* Sidebar footer with logout */}
         <div className="p-4 border-t" style={{ borderColor: '#E1DDD7' }}>
-          <Link
-            to="/"
-            className="w-full flex items-center p-3 rounded-lg transition-colors duration-200 text-left block"
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center p-3 rounded-lg transition-colors duration-200 text-left"
             style={{ color: '#DC2626' }}
             onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(220, 38, 38, 0.1)'}
             onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-            onClick={handleLinkClick}
           >
             <LogOut size={20} className="mr-3" />
-            <span>Back to Site</span>
-          </Link>
+            <span>Logout</span>
+          </button>
         </div>
       </div>
     );
@@ -180,19 +198,18 @@ const AdminSidebar = ({ mobile, onClose, isSidebarOpen, setIsSidebarOpen }) => {
             </ul>
           </nav>
 
-          {/* Sidebar footer */}
+          {/* Sidebar footer with logout */}
           <div className="p-4 border-t" style={{ borderColor: '#E1DDD7' }}>
-            <Link
-              to="/"
-              className="w-full flex items-center p-3 rounded-lg transition-colors duration-200 text-left block"
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center p-3 rounded-lg transition-colors duration-200 text-left"
               style={{ color: '#DC2626' }}
               onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(220, 38, 38, 0.1)'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-              onClick={handleLinkClick}
             >
               <LogOut size={20} className="mr-3" />
-              <span>Back to Site</span>
-            </Link>
+              <span>Logout</span>
+            </button>
           </div>
         </div>
       </aside>
