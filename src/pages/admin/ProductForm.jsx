@@ -50,7 +50,7 @@ const ProductForm = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [activeTooltip, setActiveTooltip] = useState(null);
+  // const [activeTooltip, setActiveTooltip] = useState(null); // This state isn't used, can be removed if not needed elsewhere
 
   useEffect(() => {
     // If in edit mode, fetch product data
@@ -62,13 +62,13 @@ const ProductForm = () => {
             `https://interior-designer-backend-73ri.onrender.com/api/postById/${id}`
           );
           setFormData(response.data);
-          
+
           // Set existing images
           setExistingImages({
             thumbnail: response.data.thumbnail || null,
             files: response.data.files || []
           });
-          
+
           // Set last updated time
           setLastUpdated(response.data.updatedAt);
         } catch (error) {
@@ -93,7 +93,7 @@ const ProductForm = () => {
 
   const handleFileChange = (e) => {
     const { name, files: selectedFiles } = e.target;
-    
+
     if (name === 'thumbnail') {
       setFiles(prev => ({
         ...prev,
@@ -152,12 +152,14 @@ const ProductForm = () => {
       window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error('Error downloading image:', error);
+      // You might want to show a user-friendly error message here
+      setError("Failed to download image.");
     }
   };
 
   const ImageTooltip = ({ image, type, index }) => {
     const fileName = getCleanFileName(image.fileName) || getFileNameFromUrl(image.url);
-    
+
     return (
       <div className="relative group">
         <div
@@ -183,7 +185,7 @@ const ProductForm = () => {
               <p className="text-xs text-gray-500 mb-2">
                 {type === 'thumbnail' ? 'Thumbnail' : 'Photo'}
               </p>
-              
+
               {/* Action buttons */}
               <div className="flex items-center space-x-2">
                 <button
@@ -248,80 +250,69 @@ const ProductForm = () => {
     setIsLoading(true);
     setError("");
 
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Authentication token not found. Please log in again.");
+      setIsLoading(false);
+      navigate("/admin/login"); // Redirect to login if no token
+      return;
+    }
+
     try {
+      const formDataToSend = new FormData();
+
+      // Append text fields
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('price', formData.price);
+      if (formData.oldPrice) {
+        formDataToSend.append('oldPrice', formData.oldPrice);
+      }
+      formDataToSend.append('status', formData.status);
+
+      // Append new files only if selected
+      if (files.thumbnail) {
+        formDataToSend.append('thumbnail', files.thumbnail);
+      }
+
+      files.photos.forEach((photo) => {
+        formDataToSend.append('photos', photo);
+      });
+
+      // Define headers with Authorization token
+      const headers = {
+        'Content-Type': 'multipart/form-data', // Axios automatically sets this with FormData
+        'Authorization': `Bearer ${token}` // Add the JWT token here
+      };
+
       if (isEditMode) {
-        // For edit mode, use FormData to handle file uploads
-        const formDataToSend = new FormData();
-        
-        // Append text fields
-        formDataToSend.append('title', formData.title);
-        formDataToSend.append('description', formData.description);
-        formDataToSend.append('category', formData.category);
-        formDataToSend.append('price', formData.price);
-        if (formData.oldPrice) {
-          formDataToSend.append('oldPrice', formData.oldPrice);
-        }
-        formDataToSend.append('status', formData.status);
-
-        // Append files only if new files are selected
-        if (files.thumbnail) {
-          formDataToSend.append('thumbnail', files.thumbnail);
-        }
-        
-        files.photos.forEach((photo) => {
-          formDataToSend.append('photos', photo);
-        });
-
         // Use the correct edit endpoint
         await axios.put(
-          `https://interior-designer-backend-73ri.onrender.com/api/editPost/${id}`, 
+          `https://interior-designer-backend-73ri.onrender.com/api/editPost/${id}`,
           formDataToSend,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
+          { headers } // Pass the headers
         );
       } else {
-        // For create mode, use FormData to handle file uploads
-        const formDataToSend = new FormData();
-        
-        // Append text fields
-        formDataToSend.append('title', formData.title);
-        formDataToSend.append('description', formData.description);
-        formDataToSend.append('category', formData.category);
-        formDataToSend.append('price', formData.price);
-        if (formData.oldPrice) {
-          formDataToSend.append('oldPrice', formData.oldPrice);
-        }
-        formDataToSend.append('status', formData.status);
-
-        // Append files
-        if (files.thumbnail) {
-          formDataToSend.append('thumbnail', files.thumbnail);
-        }
-        
-        files.photos.forEach((photo) => {
-          formDataToSend.append('photos', photo);
-        });
-
         // Use the createPost endpoint
         await axios.post(
-          "https://interior-designer-backend-73ri.onrender.com/api/createPost", 
+          "https://interior-designer-backend-73ri.onrender.com/api/createPost",
           formDataToSend,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
+          { headers } // Pass the headers
         );
       }
       navigate("/admin/products");
     } catch (error) {
       console.error("Error saving product:", error);
-      
-      // Handle validation errors specifically
-      if (error.response?.data?.error?.includes('validation failed')) {
+
+      // Handle specific error messages from backend
+      if (error.response?.status === 401 || error.response?.status === 403) {
+          setError("Authentication failed. Please log in again.");
+          localStorage.removeItem('token'); // Clear invalid token
+          localStorage.removeItem('isAdminAuthenticated'); // Clear auth status
+          navigate("/admin/login"); // Redirect to login
+      } else if (error.response?.data?.error?.includes('validation failed')) {
         const errorMessage = error.response.data.error;
         if (errorMessage.includes('category')) {
           setError("Invalid category selected. Please choose a valid category from the dropdown.");
@@ -331,7 +322,7 @@ const ProductForm = () => {
       } else if (error.response?.data?.message) {
         setError(error.response.data.message);
       } else {
-        setError("Failed to save product. Please try again.");
+        setError("Failed to save product. Please try again. Network error or server unreachable.");
       }
     } finally {
       setIsLoading(false);
@@ -353,13 +344,13 @@ const ProductForm = () => {
       <div className="min-h-screen p-6" style={{backgroundColor: '#FAF8F5'}}>
         <div className="max-w-4xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 
-              className="text-3xl font-bold font-['Montserrat']" 
+            <h1
+              className="text-3xl font-bold font-['Montserrat']"
               style={{color: '#2B2B2B'}}
             >
               {isEditMode ? "Edit Product" : "Add New Product"}
             </h1>
-            
+
             {/* Last Updated Time */}
             {isEditMode && lastUpdated && (
               <div className="text-sm text-gray-500 font-['Poppins']">
@@ -369,7 +360,7 @@ const ProductForm = () => {
           </div>
 
           {error && (
-            <div 
+            <div
               className="mb-6 p-4 rounded-2xl shadow-sm"
               style={{
                 backgroundColor: '#FEF2F2',
@@ -388,12 +379,12 @@ const ProductForm = () => {
               backgroundColor: '#F4ECE6',
               boxShadow: '0 4px 10px rgba(0, 0, 0, 0.05)'
             }}
-            encType="multipart/form-data"
+            encType="multipart/form-data" // Ensure this is set for file uploads
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-6">
                 <div>
-                  <label 
+                  <label
                     className="block text-sm font-semibold mb-2 font-['Poppins']"
                     style={{color: '#2B2B2B'}}
                   >
@@ -417,7 +408,7 @@ const ProductForm = () => {
                 </div>
 
                 <div>
-                  <label 
+                  <label
                     className="block text-sm font-semibold mb-2 font-['Poppins']"
                     style={{color: '#2B2B2B'}}
                   >
@@ -446,7 +437,7 @@ const ProductForm = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label 
+                    <label
                       className="block text-sm font-semibold mb-2 font-['Poppins']"
                       style={{color: '#2B2B2B'}}
                     >
@@ -468,11 +459,11 @@ const ProductForm = () => {
                     />
                   </div>
                   <div>
-                    <label 
+                    <label
                       className="block text-sm font-semibold mb-2 font-['Poppins']"
                       style={{color: '#2B2B2B'}}
                     >
-                      Old Price 
+                      Old Price
                       <span style={{color: '#6D6D6D', fontWeight: 'normal'}}>(Optional)</span>
                     </label>
                     <input
@@ -492,7 +483,7 @@ const ProductForm = () => {
                 </div>
 
                 <div>
-                  <label 
+                  <label
                     className="block text-sm font-semibold mb-2 font-['Poppins']"
                     style={{color: '#2B2B2B'}}
                   >
@@ -519,25 +510,25 @@ const ProductForm = () => {
                 {isEditMode && (existingImages.thumbnail || existingImages.files.length > 0) && (
                   <div className="space-y-6">
                     <div>
-                      <label 
+                      <label
                         className="block text-sm font-semibold mb-4 font-['Poppins']"
                         style={{color: '#2B2B2B'}}
                       >
                         Current Images
                       </label>
-                      
+
                       {/* Current Thumbnail */}
                       {existingImages.thumbnail && (
                         <div className="mb-4">
                           <h4 className="text-sm font-medium mb-2 text-gray-700">Thumbnail:</h4>
-                          <ImageTooltip 
-                            image={existingImages.thumbnail} 
-                            type="thumbnail" 
-                            index={0} 
+                          <ImageTooltip
+                            image={existingImages.thumbnail}
+                            type="thumbnail"
+                            index={0}
                           />
                         </div>
                       )}
-                      
+
                       {/* Current Photos */}
                       {existingImages.files.length > 0 && (
                         <div>
@@ -546,11 +537,11 @@ const ProductForm = () => {
                           </h4>
                           <div className="space-y-3">
                             {existingImages.files.map((file, index) => (
-                              <ImageTooltip 
+                              <ImageTooltip
                                 key={index}
-                                image={file} 
-                                type="photo" 
-                                index={index} 
+                                image={file}
+                                type="photo"
+                                index={index}
                               />
                             ))}
                           </div>
@@ -563,7 +554,7 @@ const ProductForm = () => {
                 {/* File Upload Section */}
                 <div className="space-y-6">
                   <div>
-                    <label 
+                    <label
                       className="block text-sm font-semibold mb-2 font-['Poppins']"
                       style={{color: '#2B2B2B'}}
                     >
@@ -585,7 +576,7 @@ const ProductForm = () => {
                       }}
                     />
                     {files.thumbnail && (
-                      <p 
+                      <p
                         className="text-sm mt-2 font-['Poppins']"
                         style={{color: '#6D6D6D'}}
                       >
@@ -595,7 +586,7 @@ const ProductForm = () => {
                   </div>
 
                   <div>
-                    <label 
+                    <label
                       className="block text-sm font-semibold mb-2 font-['Poppins']"
                       style={{color: '#2B2B2B'}}
                     >
@@ -616,7 +607,7 @@ const ProductForm = () => {
                       }}
                     />
                     {files.photos.length > 0 && (
-                      <p 
+                      <p
                         className="text-sm mt-2 font-['Poppins']"
                         style={{color: '#6D6D6D'}}
                       >
@@ -629,7 +620,7 @@ const ProductForm = () => {
 
               <div className="space-y-6">
                 <div>
-                  <label 
+                  <label
                     className="block text-sm font-semibold mb-2 font-['Poppins']"
                     style={{color: '#2B2B2B'}}
                   >
